@@ -1,5 +1,5 @@
 //
-//  OSCBundle.swift
+//  OSCPacket.swift
 //  OSCKit
 //
 //  Created by Sam Smallman on 29/10/2017.
@@ -26,10 +26,8 @@
 
 import Foundation
 
-public class OSCBundle: OSCPacket {
+public protocol OSCPacket {
     
-    public func packetData()->Data {
-        return Data()
-    }
+    func packetData()->Data
     
 }

@@ -15,6 +15,7 @@
 		A5227D2E1FA60C23002652EC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5227D2D1FA60C23002652EC /* ViewController.swift */; };
 		A5227D301FA60C23002652EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5227D2F1FA60C23002652EC /* Assets.xcassets */; };
 		A5227D331FA60C23002652EC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A5227D311FA60C23002652EC /* Main.storyboard */; };
+		A52B6D3820066190008EA98F /* OSCPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52B6D3720066190008EA98F /* OSCPacket.swift */; };
 		A55D7A801FD59337008BAF58 /* ClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B30361F3101290040139D /* ClientDelegate.swift */; };
 		A55D7A811FD59337008BAF58 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B301F1F30DFC70040139D /* Client.swift */; };
 		A55D7A831FD59337008BAF58 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B30201F30DFC70040139D /* Server.swift */; };
@@ -68,6 +69,7 @@
 		A5227D321FA60C23002652EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A5227D341FA60C23002652EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A5227D351FA60C23002652EC /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
+		A52B6D3720066190008EA98F /* OSCPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSCPacket.swift; sourceTree = "<group>"; };
 		A55B301F1F30DFC70040139D /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		A55B30201F30DFC70040139D /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		A55B30211F30DFC70040139D /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
@@ -134,10 +136,11 @@
 				A55B301F1F30DFC70040139D /* Client.swift */,
 				A55B30361F3101290040139D /* ClientDelegate.swift */,
 				A55B30201F30DFC70040139D /* Server.swift */,
-				A50A91C31FD9D7BC0077BAD1 /* OSCPacketDestination.swift */,
 				A55B30211F30DFC70040139D /* Socket.swift */,
 				A5C7D89B1F30B651003C2EEF /* Interface.swift */,
 				A50A91BE1FD9BB220077BAD1 /* Interface Extension.swift */,
+				A50A91C31FD9D7BC0077BAD1 /* OSCPacketDestination.swift */,
+				A52B6D3720066190008EA98F /* OSCPacket.swift */,
 				A50A91C01FD9D6C10077BAD1 /* OSCMessage.swift */,
 				A50A91C51FD9D8470077BAD1 /* OSCBundle.swift */,
 				A57968EE1FA5DAC700D9B9EE /* OSCParser.swift */,
@@ -355,6 +358,7 @@
 				A55D7A851FD59337008BAF58 /* Socket.swift in Sources */,
 				A50A91BF1FD9BB220077BAD1 /* Interface Extension.swift in Sources */,
 				A50A91C41FD9D7BC0077BAD1 /* OSCPacketDestination.swift in Sources */,
+				A52B6D3820066190008EA98F /* OSCPacket.swift in Sources */,
 				A50A91C21FD9D6CD0077BAD1 /* OSCMessage.swift in Sources */,
 				A57968EF1FA5DAC700D9B9EE /* OSCParser.swift in Sources */,
 				A55D7A801FD59337008BAF58 /* ClientDelegate.swift in Sources */,

@@ -26,7 +26,7 @@
 
 import Foundation
 
-public class OSCMessage {
+public class OSCMessage: OSCPacket {
     
     public var addressPattern: String = "/"
     public var addressParts: [String] { // Address pattern are components seperated by "/"
@@ -85,10 +85,55 @@ public class OSCMessage {
         self.typeTagString = newTypeTagString
     }
     
+    public func packetData()->Data {
+        var result = self.addressPattern.oscStringData()
+        for argument in arguments {
+            if argument is String {
+                guard let stringArgument = argument as? String else {
+                    break
+                }
+                result.append(stringArgument.oscStringData())
+            } else if argument is Data {
+                guard let blobArgument = argument as? Data else {
+                    break
+                }
+                result.append(blobArgument.oscBlobData())
+            } else if argument is Int32 {
+                guard let intArgument = argument as? Int32 else {
+                    break
+                }
+                result.append(intArgument.oscIntData())
+            } else if argument is Float32 {
+                guard let floatArgument = argument as? Float32 else {
+                    break
+                }
+                result.append(floatArgument.oscFloatData())
+            }
+        }
+        return result
+    }
 }
 
 extension String {
     func oscStringData()->Data {
+        return Data()
+    }
+}
+
+extension Data {
+    func oscBlobData()->Data {
+    return Data()
+    }
+}
+
+extension Int32 {
+    func oscIntData()->Data {
+        return Data()
+    }
+}
+
+extension Float32 {
+    func oscFloatData()->Data  {
         return Data()
     }
 }

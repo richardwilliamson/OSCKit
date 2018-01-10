@@ -182,10 +182,10 @@ public class Socket {
         socket.disconnect()
     }
     
-    func sendPacket(with data: Data) {
+    func sendPacket(with packet: OSCPacket) {
         if let socket = self.tcpSocket {
-            let aData = data as NSData
-            socket.write(data, withTimeout: timeout, tag: aData.length)
+            let aData = packet.packetData() as NSData
+            socket.write(packet.packetData(), withTimeout: timeout, tag: aData.length)
         }
         if let socket = self.udpSocket {
             if let aInterface = self.interface {
@@ -202,7 +202,7 @@ public class Socket {
                 debugPrint("Warning: \(socket) unable to enable UDP broadcast")
             }
             if let aHost = host {
-                socket.send(data, toHost: aHost, port: self.port, withTimeout: timeout, tag: 0)
+                socket.send(packet.packetData(), toHost: aHost, port: self.port, withTimeout: timeout, tag: 0)
                 socket.closeAfterSending()
             }
         }

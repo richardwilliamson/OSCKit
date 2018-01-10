@@ -119,7 +119,7 @@ public class Client : NSObject, GCDAsyncSocketDelegate, GCDAsyncUdpSocketDelegat
         self.readState.setValue(false, forKey: "dangling_ESC")
     }
     
-    public func sendPacket(with data: Data) {
+    public func sendPacket(with packet: OSCPacket) {
         if self.socket == nil {
             do {
                 try connect()
@@ -135,7 +135,7 @@ public class Client : NSObject, GCDAsyncSocketDelegate, GCDAsyncUdpSocketDelegat
             // Listen for a potential response.
             tcpSocket.readData(withTimeout: -1, tag: 0)
         }
-        sock.sendPacket(with: data)
+        sock.sendPacket(with: packet)
     }
     
     // MARK: GCDAsyncSocketDelegate
