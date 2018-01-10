@@ -27,10 +27,68 @@
 import Foundation
 
 public class OSCMessage {
-//    
-//    public var addressPattern: String
-//    public var typeTagString: String
-//    public var arguments: NSArray
+    
+    public var addressPattern: String = "/"
+    public var addressParts: [String] { // Address pattern are components seperated by "/"
+        get {
+            var parts = self.addressPattern.components(separatedBy: "/")
+            parts.removeFirst()
+            return parts
+        }
+    }
+    public var arguments: [Any] = []
+    public var typeTagString: String = ","
+    public var replySocket: Socket?
     
     
+    init(messageWithAddressPattern addressPattern: String, arguments: [Any]) {
+        message(with: addressPattern, arguments: arguments, replySocket: nil)
+    }
+    
+    init(messageWithAddressPattern addressPattern: String, arguments: [Any], replySocket: Socket?) {
+        message(with: addressPattern, arguments: arguments, replySocket: replySocket)
+    }
+    
+    private func message(with addressPattern: String, arguments: [Any], replySocket: Socket?) {
+        set(addressPattern: addressPattern)
+        set(arguments: arguments)
+        self.replySocket = replySocket
+    }
+    
+    private func set(addressPattern: String) {
+        if addressPattern.isEmpty || addressPattern.count == 0 || addressPattern.first != "/" {
+            self.addressPattern = "/"
+        } else {
+            self.addressPattern = addressPattern
+        }
+    }
+    
+    private func set(arguments: [Any]) {
+        var newArguments: [Any] = []
+        var newTypeTagString: String = ","
+        for argument in arguments {
+            if argument is String {
+                newTypeTagString.append("s")
+                newArguments.append(argument)
+            } else if argument is Data {
+                newTypeTagString.append("b")
+                newArguments.append(argument)
+            } else if argument is Int32 {
+                newTypeTagString.append("i")
+                newArguments.append(argument)
+            } else if argument is Float32 {
+                newTypeTagString.append("f")
+                newArguments.append(argument)
+            }
+        }
+        self.arguments = newArguments
+        self.typeTagString = newTypeTagString
+    }
+    
+}
+
+extension String {
+    func oscStringData()->Data {
+        return Data()
+    }
 }
