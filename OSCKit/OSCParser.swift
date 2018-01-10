@@ -28,9 +28,9 @@ import Cocoa
 
 public class OSCParser {
     
-    public enum oscTCPVersion {
-        case SLIP
-        case PLH
+    public enum streamFraming {
+        case SLIP   // SLIP protocol
+        case PLH    // Packet Length Header
     }
     
     public func process(OSCDate data: Data, for destination: OSCPacketDestination, with replySocket: Socket) {
@@ -47,9 +47,14 @@ public class OSCParser {
         }
     }
     
-    public func translate(OSCData tcpData: Data, version: oscTCPVersion, to data: NSMutableData, with state: NSMutableDictionary) {
+    public func translate(OSCData tcpData: Data, version: streamFraming, to data: NSMutableData, with state: NSMutableDictionary) {
         // There are two versions of OSC. OSC 1.1 frames messages using the SLIP protocol: http://www.rfc-editor.org/rfc/rfc1055.txt
         if version == .SLIP {
+            guard let socket = state.object(forKey: "socket") else {
+                print("Error: Parser can not translate SLIP Data without a socket.")
+                return
+            }
+            let dangling_ESC = state.object(forKey: "dangling_ESC") as! Bool
             
         }
     }

@@ -54,7 +54,7 @@ public class Server: NSObject, GCDAsyncSocketDelegate, GCDAsyncUdpSocketDelegate
             self.udpSocket?.port = newValue
         }
     }
-    public var tcpFormat: OSCParser.oscTCPVersion = .SLIP
+    public var tcpFormat: OSCParser.streamFraming = .SLIP
     
     private var udpReplyPort: UInt16 = 0
     var delegate: OSCPacketDestination?
