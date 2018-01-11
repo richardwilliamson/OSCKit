@@ -41,11 +41,11 @@ public class OSCMessage: OSCPacket {
     public var replySocket: Socket?
     
     
-    init(messageWithAddressPattern addressPattern: String, arguments: [Any]) {
+    public init(messageWithAddressPattern addressPattern: String, arguments: [Any]) {
         message(with: addressPattern, arguments: arguments, replySocket: nil)
     }
     
-    init(messageWithAddressPattern addressPattern: String, arguments: [Any], replySocket: Socket?) {
+    public init(messageWithAddressPattern addressPattern: String, arguments: [Any], replySocket: Socket?) {
         message(with: addressPattern, arguments: arguments, replySocket: replySocket)
     }
     
@@ -69,17 +69,24 @@ public class OSCMessage: OSCPacket {
         for argument in arguments {
             if argument is String {
                 newTypeTagString.append("s")
-                newArguments.append(argument)
             } else if argument is Data {
                 newTypeTagString.append("b")
-                newArguments.append(argument)
-            } else if argument is Int32 {
-                newTypeTagString.append("i")
-                newArguments.append(argument)
-            } else if argument is Float32 {
-                newTypeTagString.append("f")
-                newArguments.append(argument)
+            } else if argument is NSNumber {
+                guard let number = argument as? NSNumber else {
+                    break
+                }
+                let numberType = CFNumberGetType(number)
+                switch numberType {
+                case CFNumberType.sInt8Type,CFNumberType.sInt16Type,CFNumberType.sInt32Type,CFNumberType.sInt64Type,CFNumberType.charType,CFNumberType.shortType,CFNumberType.intType,CFNumberType.longType,CFNumberType.longLongType,CFNumberType.nsIntegerType:
+                    newTypeTagString.append("i")
+                case CFNumberType.float32Type, CFNumberType.float64Type, CFNumberType.floatType, CFNumberType.doubleType, CFNumberType.cgFloatType:
+                    newTypeTagString.append("f")
+                default:
+                    debugPrint("Number with unrecognised type: \(argument)")
+                    continue
+                }
             }
+            newArguments.append(argument)
         }
         self.arguments = newArguments
         self.typeTagString = newTypeTagString
@@ -87,6 +94,7 @@ public class OSCMessage: OSCPacket {
     
     public func packetData()->Data {
         var result = self.addressPattern.oscStringData()
+        result.append(self.typeTagString.oscStringData())
         for argument in arguments {
             if argument is String {
                 guard let stringArgument = argument as? String else {
@@ -98,42 +106,68 @@ public class OSCMessage: OSCPacket {
                     break
                 }
                 result.append(blobArgument.oscBlobData())
-            } else if argument is Int32 {
-                guard let intArgument = argument as? Int32 else {
+            } else if argument is NSNumber {
+                guard let number = argument as? NSNumber else {
                     break
                 }
-                result.append(intArgument.oscIntData())
-            } else if argument is Float32 {
-                guard let floatArgument = argument as? Float32 else {
-                    break
+                let numberType = CFNumberGetType(number)
+                switch numberType {
+                case CFNumberType.sInt8Type,CFNumberType.sInt16Type,CFNumberType.sInt32Type,CFNumberType.sInt64Type,CFNumberType.charType,CFNumberType.shortType,CFNumberType.intType,CFNumberType.longType,CFNumberType.longLongType,CFNumberType.nsIntegerType:
+                    result.append(number.oscIntData())
+                case CFNumberType.float32Type, CFNumberType.float64Type, CFNumberType.floatType, CFNumberType.doubleType, CFNumberType.cgFloatType:
+                    result.append(number.oscFloatData())
+                default:
+                    debugPrint("Number with unrecognised type: \(argument)")
+                    continue
                 }
-                result.append(floatArgument.oscFloatData())
+                
             }
         }
+        OSCParser().parseOSCMessage(with: result)
         return result
     }
 }
 
 extension String {
     func oscStringData()->Data {
-        return Data()
+        var data = self.data(using: String.Encoding.utf8)!
+        for _ in 1...4-data.count%4 {
+            var null = UInt8(0)
+            data.append(&null, count: 1)
+        }
+        return data
     }
 }
 
 extension Data {
     func oscBlobData()->Data {
-    return Data()
+        let length = UInt32(self.count)
+        var int = length.bigEndian
+        let buffer = UnsafeBufferPointer(start: &int, count: 1)
+        let sizeCount = Data(buffer: buffer)
+        var data = Data()
+        data.append(sizeCount)
+        data.append(self)
+        while data.count % 4 != 0 {
+            var null = UInt8(0)
+            data.append(&null, count: 1)
+        }
+        return data
     }
 }
 
-extension Int32 {
+extension NSNumber {
+    
     func oscIntData()->Data {
-        return Data()
+        var int = Int32(truncating: self).bigEndian
+        let buffer = UnsafeBufferPointer(start: &int, count: 1)
+        return Data(buffer: buffer)
+    }
+    
+    func oscFloatData()->Data  {
+        var float = CFConvertFloatHostToSwapped(Float32(truncating: self))
+        let buffer = UnsafeBufferPointer(start: &float , count: 1)
+        return Data(buffer: buffer)
     }
 }
 
-extension Float32 {
-    func oscFloatData()->Data  {
-        return Data()
-    }
-}

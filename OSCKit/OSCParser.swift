@@ -59,7 +59,7 @@ public class OSCParser {
         }
     }
     
-    private func parseOSCMessage(with data: Data) {
+    public func parseOSCMessage(with data: Data) {
 //        print("Parsing OSC Message: \(data)")
         var startIndex = 0
         guard let addressPattern = oscString(with: data, startIndex: &startIndex) else {
@@ -86,28 +86,28 @@ public class OSCParser {
                         return
                     }
                     arguments.append(stringArgument)
-                    print(stringArgument)
+                    print("String Argument: \(stringArgument)")
                 case "i":
                     guard let intArgument = oscInt(with: data, startIndex: &startIndex) else {
                         print("Error: Unable to parse Int Argument.")
                         return
                     }
                     arguments.append(intArgument)
-                    print(intArgument)
+                    print("Int Argument: \(intArgument)")
                 case "f":
                     guard let floatArgument = oscFloat(with: data, startIndex: &startIndex) else {
                         print("Error: Unable to parse Float Argument.")
                         return
                     }
                     arguments.append(floatArgument)
-                    print(floatArgument)
+                    print("Float Argument: \(floatArgument)")
                 case "b":
                     guard let blobArgument = oscBlob(with: data, startIndex: &startIndex) else {
                         print("Error: Unable to parse Blob Argument.")
                         return
                     }
                     arguments.append(blobArgument)
-                    print(blobArgument)
+                    print("Blob Argument: \(blobArgument)")
                 default:
                     break
                 }

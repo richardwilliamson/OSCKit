@@ -34,16 +34,22 @@ class ViewController: NSViewController, ClientDelegate {
     
     override func viewDidAppear() {
 //        client.interface = "192.168.1.102"
-        client.host = "192.168.1.101"
-        client.port = 3032
-        client.useTCP = true
+        client.host = "172.16.6.62"
+        client.port = 24601
+        client.useTCP = false
         client.delegate = self
-        do {
-            try client.connect()
-            print("Connecting")
-        } catch let error as NSError {
-            print(error.localizedDescription)
-        }
+//        do {
+//            try client.connect()
+//            print("Connecting")
+//        } catch let error as NSError {
+//            print(error.localizedDescription)
+//        }
+        let data = Data(bytes: [0x00, 0x01, 0x02, 0x03])
+        let message = OSCMessage(messageWithAddressPattern: "/hey", arguments: ["Jerry",2147483647,-2,3,3.142,-246.81,"Tom",data])
+        client.sendPacket(with: message)
+        textView.string += "\n*** Sending OSC Message ***\n"
+        textView.string += "Address Pattern: /hey\n"
+        textView.string += "Arguments: something\n"
     }
     
     deinit {
